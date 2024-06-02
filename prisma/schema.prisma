@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model category {
+  categoryID   Int           @id @default(autoincrement())
+  categoryName String        @db.VarChar(255)
+  categoryType Boolean
+  createdAt    DateTime?     @db.DateTime(0)
+  isDeleted    Boolean
+  createdBy    String        @db.VarChar(255)
+  updatedAt    DateTime      @default(now()) @db.DateTime(0)
+  updatedBy    String?       @db.VarChar(255)
+  transaction  transaction[]
+}
+
+model transaction {
+  transactionID          Int       @id @default(autoincrement())
+  transactionDescription String?   @db.Text
+  transactionDate        DateTime? @db.DateTime(0)
+  transactionAmount      BigInt
+  isDeleted              Int       @db.TinyInt
+  createdAt              DateTime? @db.DateTime(0)
+  createdBy              String    @db.VarChar(255)
+  updatedAt              DateTime  @default(now()) @db.DateTime(0)
+  updatedBy              String?   @db.VarChar(255)
+  userID                 Int
+  categoryID             Int
+  category               category  @relation(fields: [categoryID], references: [categoryID], onUpdate: Restrict, map: "categoryID")
+  user                   user      @relation(fields: [userID], references: [userID], onUpdate: Restrict, map: "userID")
+
+  @@index([categoryID], map: "categoryID")
+  @@index([userID], map: "userID")
+}
+
+model user {
+  userID       Int           @id @default(autoincrement())
+  userName     String        @db.VarChar(100)
+  userHashPass String        @db.VarChar(255)
+  userEmail    String?       @db.VarChar(255)
+  isActive     Boolean
+  createdAt    DateTime      @db.DateTime(0)
+  createBy     String?       @db.VarChar(255)
+  updatedAt    DateTime      @default(now()) @db.DateTime(0)
+  updatedBy    String?       @db.VarChar(255)
+  transaction  transaction[]
+}
