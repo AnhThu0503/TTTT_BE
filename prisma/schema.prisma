@@ -23,7 +23,7 @@ model transaction {
   transactionID          Int       @id @default(autoincrement())
   transactionDescription String?   @db.Text
   transactionDate        DateTime? @db.DateTime(0)
-  transactionAmount      BigInt
+  transactionAmount      Int
   isDeleted              Int       @db.TinyInt
   createdAt              DateTime? @db.DateTime(0)
   createdBy              String    @db.VarChar(255)
